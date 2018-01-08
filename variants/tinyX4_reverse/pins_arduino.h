@@ -38,29 +38,49 @@
 
 #define digitalPinHasPWM(p)         ((p) == 5 || (p) == 6 || (p) == 7 || (p) == 8)
 
+//This part has a USI, not an SPI module. Accordingly, there is no MISO/MOSI in hardware. There's a DI and a DO. When the chip is used as master, DI is used as MISO, DO is MOSI; the defines here specify the pins for master mode, as SPI master is much more commonly used in Arduino-land than SPI slave, and these defines are required for compatibility. Be aware of this when using the USI SPI fucntionality (and also, be aware that the MISO and MOSI markings on the pinout diagram in the datasheet are for ISP programming, where the chip is a slave. The pinout diagram included with this core attempts to clarify this)
+
+
 #define SS   3
-#define MOSI 6
-#define MISO 5
+#define MOSI 5
+#define MISO 6
 #define SCK  4
 
+
 #define USI_DDR_PORT DDRA
+#define USI_SCK_PORT DDRA
 #define USCK_DD_PIN DDA4
 #define DO_DD_PIN DDA5
 #define DI_DD_PIN DDA6
+#  define DDR_USI DDRA
+#  define PORT_USI PORTA
+#  define PIN_USI PINA
+#  define PORT_USI_SDA PORTA6
+#  define PORT_USI_SCL PORTA4
+#  define PIN_USI_SDA PINA6
+#  define PIN_USI_SCL PINA4
+#  define USI_START_VECTOR USI_START_vect
+#  define USI_OVERFLOW_VECTOR USI_OVF_vect
+#  define DDR_USI_CL DDR_USI
+#  define PORT_USI_CL PORT_USI
+#  define PIN_USI_CL PIN_USI
+#ifndef USI_START_COND_INT
+#  define USI_START_COND_INT USISIF
+#endif
 
 static const uint8_t SDA = 6;
 static const uint8_t SCL = 4;
 
 //Ax constants should not be used for digitalRead/digitalWrite/analogWrite functions, only analogRead().
 //#define ANALOG_PINS_ARE_ADC_NUMBERS 1
-static const uint8_t A0 = 0;
-static const uint8_t A1 = 1;
-static const uint8_t A2 = 2;
-static const uint8_t A3 = 3;
-static const uint8_t A4 = 4;
-static const uint8_t A5 = 5;
-static const uint8_t A6 = 6;
-static const uint8_t A7 = 7;
+static const uint8_t A0 = 0x80 | 0;
+static const uint8_t A1 = 0x80 | 1;
+static const uint8_t A2 = 0x80 | 2;
+static const uint8_t A3 = 0x80 | 3;
+static const uint8_t A4 = 0x80 | 4;
+static const uint8_t A5 = 0x80 | 5;
+static const uint8_t A6 = 0x80 | 6;
+static const uint8_t A7 = 0x80 | 7;
 #define PIN_A0  (0)
 #define PIN_A1  ( 1)
 #define PIN_A2  ( 2)
@@ -69,11 +89,11 @@ static const uint8_t A7 = 7;
 #define PIN_A5  ( 5)
 #define PIN_A6  ( 6)
 #define PIN_A7  ( 7)
-#define PIN_B0  ( 8)
+#define PIN_B0  ( 10)
 #define PIN_B1  ( 9)
-#define PIN_B2  ( 10)
+#define PIN_B2  ( 8)
 #define PIN_B3  (11)  /* RESET */
-#define LED_BUILTIN (10)
+#define LED_BUILTIN (8)
 
 //----------------------------------------------------------
 //----------------------------------------------------------
